@@ -13,27 +13,39 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
 /**
+ * Subsystem that controls robot's drive motors
+ * and memes
+ * @author nikol
  *
  */
 public class DriveTrain extends Subsystem  {
 	
-	RobotDrive driveTrain;
-	public VictorSP frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor;
-	Joystick driveController, sfController;
-	Joystick wingmanJoystick;
-	public static boolean isInverted;
-	public static boolean toggle;
+	//Drive motor controllers
+	private RobotDrive driveTrain;
+	private VictorSP frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor;
+	
+	//Xbox and other controller
+	private Joystick driveController, sfController;
+	//Joystick wingmanJoystick;
+	
+	//
+	private static boolean isInverted;
+	private static boolean toggle;
 //	public VisionThread visionThread;
 //	private double centerWhole = 0.0;
 //	private double centerX = 0.0;
 //	private double centerX2 = 0.0;
 //	private final Object imgLock = new Object();
 	
+	/**
+	 * Construct a new drivetrain object
+	 */
 	public DriveTrain() {
+		//init fields to default values
 		//System.out.println("DriveTrain()");
 		driveController = OI.driveController;
 		sfController = OI.sfController;
-		wingmanJoystick = OI.wingmanController;
+		//wingmanJoystick = OI.wingmanController;
 		isInverted = false;
 		toggle = false;
 		
@@ -49,6 +61,7 @@ public class DriveTrain extends Subsystem  {
 		backLeftMotor.enableDeadbandElimination(false);
 		backRightMotor.enableDeadbandElimination(false);
 		
+		//don't invert motor controllers
 		backLeftMotor.setInverted(false);
 		frontRightMotor.setInverted(false);
 		frontLeftMotor.setInverted(false);
@@ -62,13 +75,23 @@ public class DriveTrain extends Subsystem  {
     	driveTrain.setSafetyEnabled(true);
     	driveTrain.setExpiration(0.5);
 	}
-
+/**
+ * Sets default command for DriveTrain system
+ */
 	public void initDefaultCommand() {
 		//System.out.println("DriveTrain.setDefaultCommand()");
         // Set the default command for a subsystem here.
 		setDefaultCommand(new BasicDrive());
     }
 	
+	/**
+	 * Drives based on speed and rotation values
+	 * 
+	 * @param moveValue Integer or decimal value from -1 to 1, defines motor speed
+	 * @param rotValue Integer or decimal value from -1 to 1, defines robot rotation
+	 * @param fineControl Enable precise driving 
+	 * @param slowMove Enable slow driving
+	 */
 	public void drive(double moveValue, double rotValue, boolean fineControl, boolean slowMove) {
 		//System.out.println("DriveTrain.drive()");
 		if (moveValue < 0) { //fourth power curve

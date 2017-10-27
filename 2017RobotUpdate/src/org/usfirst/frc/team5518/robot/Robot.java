@@ -29,22 +29,27 @@ import edu.wpi.first.wpilibj.CameraServer;
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
  * directory.
+ * @author Nikolaus
  */
 public class Robot extends IterativeRobot {
 	
+	//Robot subsystems
 	public static DriveTrain driveTrain;
 	public static MotorController motorController;
 	
 //	public static UsbCamera camera;
 	
-	public static final int IMG_WIDTH = 1280;
-	public static final int IMG_HEIGHT = 720;
+	//Camera Properties
+/*	public static final int IMG_WIDTH = 1280;
+	public static final int IMG_HEIGHT = 720;*/
 	
+	//Robot autonomous commands
 	Command auto;
 	Command basicDrive;
 	Command driveForwardAuto;
 	Command runMotor;
 	
+	//Autonomous Command Selector for driver dashboard
 	SendableChooser<Command> chooser;
 	
 	public static Ultrasonic ultra;
@@ -55,27 +60,25 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		
+		//Initializes subsystems
 		driveTrain = new DriveTrain();
-		
+		motorController = new MotorController();
+		basicDrive = new BasicDrive();
 //		camera = CameraServer.getInstance().startAutomaticCapture();
 //		camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 //		camera.setExposureAuto();
 //		camera.setExposureManual(60);
 //		camera.setExposureHoldCurrent();
-		
+//		Init autonomous command selector
 		chooser = new SendableChooser<>();
-		
+		//Adds autonomous commands to selector
 		chooser.addObject("Drive Forward", new DriveForwardAuto());
 		chooser.addDefault("Center Auto", new CenterAuto());
 		chooser.addObject("Left Auto", new LeftAuto());
 		chooser.addObject("Right Auto", new RightAuto());
 		
 		SmartDashboard.putData("Choose an auto mode: ", chooser);
-		
-		motorController = new MotorController();
-		basicDrive = new BasicDrive();
-		
+		//Sets up ultrasonic sensor
 		ultra = new Ultrasonic(1, 0);
     	ultra.setAutomaticMode(true);
 	}
@@ -161,7 +164,7 @@ public class Robot extends IterativeRobot {
 //			autonomousCommand.cancel();
 		
 		
-		
+//		Cancels autonomous command
 		if (auto != null) {
 			auto.cancel();
 //			basicDrive.start();
@@ -169,8 +172,10 @@ public class Robot extends IterativeRobot {
 		
 //		camera.setExposureAuto();
 //		camera.setExposureHoldCurrent();
+		//Closes gear doors
 		Robot.motorController.closeDoors();
 		//ultra.free();
+		
 		
 		System.out.println("-----------------------------TELEOP INIT-----------------------------");
 	}
